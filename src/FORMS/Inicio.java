@@ -1,5 +1,7 @@
 package FORMS;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -8,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 /**
  *
  * @author Sistemas1
@@ -19,6 +22,35 @@ public class Inicio extends javax.swing.JFrame {
     
     public Inicio() {
         initComponents();
+    }
+    
+    
+    public static String notas (String mensaje) {
+        try {
+            String hora = hora ();
+            File TextFile = new File("c:/bitacora.txt");
+            FileWriter TextOut = new FileWriter(TextFile, true);
+            TextOut.write("\n"+mensaje+"    -"+hora+"\n");
+            TextOut.close();
+        }
+        catch (Exception notas) {
+            System.out.println("ERROR EN GRABACION EN BITACORA: "+notas);
+        }
+        String grabado = "grabado";
+        return (grabado);
+    }
+    
+    public static String hora ( ) {
+        Calendar calendar =Calendar.getInstance(); //obtiene la fecha de hoy 
+        Calendar calendario = new GregorianCalendar();
+        int hora, minutos, segundos;
+        hora =calendario.get(Calendar.HOUR_OF_DAY);
+        minutos = calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND);
+        String horas = hora + ":" + minutos + ":" + segundos;
+        String fecha = (String.format("%1$td-%1$tm-%1$ty",  calendar.getTime()));
+        String fechas = fecha+"/"+horas;
+        return (fechas);
     }
     
     void CrearTabla () {
@@ -63,9 +95,13 @@ public class Inicio extends javax.swing.JFrame {
             PreparedStatement pst = cn.prepareStatement(sentencia);
             pst.executeUpdate();
             System.out.println("-Creada tabla (reporte"+actual+") - Ok");
+            String mensaje = "-Creada tabla (reporte"+actual+") - Ok";
+            notas (mensaje);
         }
         catch (Exception tabla) {
             System.out.println("Error al crear tabla "+ tabla);
+            String mensaje = "Error al crear tabla "+ tabla;
+            notas (mensaje);
         }
     }
     
